@@ -43,6 +43,15 @@ class AdalineGD(BaseLinearClassifier):
         self._weights = np.zeros(1 + X.shape[1])
         self._cost = []
 
+        for _ in xrange(self.nIterations):
+            yPred = self._net_input(X)  # this is the predicted y's (y-hats) for every row
+            errors = y - yPred
+            # Each column in X multiplied by the errors vector, summed, and then multiplied by the learning rate
+            self._weights[1:] += self.learningRate * X.T.dot(errors)  # matrix-vector multiplication, one number per weight
+            self._weights[0] += self.learningRate * errors.sum()
+            cost = (1./2.) * (errors ** 2).sum()  # SSE (sum of squared errors)
+            self._cost.append(cost)
+
         return self
 
     def _activation(self, X):
