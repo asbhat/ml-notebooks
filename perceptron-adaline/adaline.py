@@ -33,11 +33,7 @@ class AdalineGD(BaseLinearClassifier):
         return self._cost
 
     def fit(self, X, y):
-        X = np.array(X)
-        y = np.array(y)
-
-        # adjust target variable to fit perceptron (if needed)
-        y = np.where(y == 1, 1, -1)
+        X, y = self._numpify_and_adjust(X, y)
 
         # initializing weights as an array of 0's for each feature (column), +1 for the threshold (w_0 where x_0 == 1)
         self._weights = np.zeros(1 + X.shape[1])

@@ -59,6 +59,20 @@ class BaseLinearClassifier(object):
     def fit(self, X, y):
         pass
 
+    @staticmethod
+    def _numpify_and_adjust(X, y):
+        """
+        Adjusts the X matrix and y vector before fitting
+
+        1) Makes sure both X and y are np arrays
+        2) Adjusts the y target variable (can often be 1's and 0's) to 1 and -1
+        """
+        X = np.array(X)
+        y = np.array(y)
+        # adjust target variable to fit perceptron (if needed)
+        y = np.where(y == 1, 1, -1)
+        return X, y
+
     def predict(self, X):
         """Predict class label based on current weights"""
         return np.where(self._net_input(X) >= 0, 1, -1)
