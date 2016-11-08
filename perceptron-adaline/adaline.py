@@ -40,8 +40,10 @@ class AdalineGD(BaseLinearClassifier):
         self._cost = []
 
         for _ in xrange(self.nIterations):
-            yPred = self._net_input(X)  # this is the predicted y's (y-hats) for every row
-            errors = y - yPred
+            # 'output' is the dot product of the feature matrix and weights vector
+            # it contains continuous predictions for all y values, before being binarized
+            output = self._net_input(X)
+            errors = y - output
             # Each column in X multiplied by the errors vector, summed, and then multiplied by the learning rate
             self._weights[1:] += self.learningRate * X.T.dot(errors)  # matrix-vector multiplication, one number per weight
             self._weights[0] += self.learningRate * errors.sum()
@@ -51,6 +53,7 @@ class AdalineGD(BaseLinearClassifier):
         return self
 
     def _activation(self, X):
+        """The Identity Matrix to _net_input()"""
         return self._net_input(X)
 
     def predict(self, X):
