@@ -73,7 +73,7 @@ class AdalineSGD(AdalineGD):
     def __init__(self, learningRate=.01, nIterations=10, doShuffle=True, randomState=None):
         super(AdalineSGD, self).__init__(learningRate, nIterations)
         self.doShuffle = doShuffle
-        if self.randomState is not None:
+        if randomState is not None:
             np.random.seed(randomState)
 
     def fit(self, X, y):
@@ -103,8 +103,11 @@ class AdalineSGD(AdalineGD):
         if self._weights is None:
             self._initialize_weights(X.shape[1])
 
-        for features, target in zip(X, y):
-            self._update_weights(features, target)
+        if y.ravel().shape[0] > 1:  # ravel flattens a single number to an array for y, so shape will work
+            for features, target in zip(X, y):  # zip needs at least 2 numbers for y
+                self._update_weights(features, target)
+        else:
+            self._update_weights(X, y)
 
         return self
 
