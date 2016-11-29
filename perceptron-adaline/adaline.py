@@ -124,7 +124,7 @@ class AdalineSGD(AdalineGD):
         # it contains a continuous prediction for this row's y value, before being binarized
         output = self._net_input(features)
         error = target - output
-        # same 'update' formula and usage as the Perceptron ('error' is no an integer here though)
+        # same 'update' formula and usage as the Perceptron ('error' is not an integer here though)
         update = self.learningRate * error
         self._weights[1:] += update * features
         self._weights[0] += update
