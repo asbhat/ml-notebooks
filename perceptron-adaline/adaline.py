@@ -14,16 +14,16 @@ class AdalineGD(BaseLinearClassifier):
 
     Uses Batch Gradient Decent (all of X to update weights)
 
-    learningRate: between 0 and 1
+    learning_rate: between 0 and 1
         1 means the complete difference between actual and estimated is applied (might overestimate and/or never converge)
         0 means there is no learning (weights do not change at all)
 
-    nIterations: integer >= 0
+    iterations: integer >= 0
         Number of times (or "epochs") the weights are corrected
     """
 
-    def __init__(self, learningRate=.01, nIterations=50):
-        super(AdalineGD, self).__init__(learningRate, nIterations)
+    def __init__(self, learning_rate=.01, iterations=50):
+        super(AdalineGD, self).__init__(learning_rate, iterations)
         self._cost = None
 
     @property
@@ -39,14 +39,14 @@ class AdalineGD(BaseLinearClassifier):
         self._weights = np.zeros(1 + X.shape[1])
         self._cost = []
 
-        for _ in xrange(self.nIterations):
+        for _ in xrange(self.iterations):
             # 'output' is the dot product of the feature matrix and weights vector
             # it contains continuous predictions for all y values, before being binarized
             output = self._net_input(X)
             errors = y - output
             # Each column in X multiplied by the errors vector, summed, and then multiplied by the learning rate
-            self._weights[1:] += self.learningRate * X.T.dot(errors)  # matrix-vector multiplication, one number per weight
-            self._weights[0] += self.learningRate * errors.sum()
+            self._weights[1:] += self.learning_rate * X.T.dot(errors)  # matrix-vector multiplication, one number per weight
+            self._weights[0] += self.learning_rate * errors.sum()
             cost = (1./2.) * (errors ** 2).sum()  # SSE (sum of squared errors)
             self._cost.append(cost)
 
@@ -66,15 +66,15 @@ class AdalineSGD(AdalineGD):
     shuffle: bool (default=True)
         if True, training data will be shuffled after every epoch to prevent cycles (non-convergence)
 
-    randomState: int or None (default=None)
+    random_state: int or None (default=None)
         Use a state (seed) to repeat randomization of the training dataset
     """
 
-    def __init__(self, learningRate=.01, nIterations=10, doShuffle=True, randomState=None):
-        super(AdalineSGD, self).__init__(learningRate, nIterations)
-        self.doShuffle = doShuffle
-        if randomState is not None:
-            np.random.seed(randomState)
+    def __init__(self, learning_rate=.01, iterations=10, do_shuffle=True, random_state=None):
+        super(AdalineSGD, self).__init__(learning_rate, iterations)
+        self.do_shuffle = do_shuffle
+        if random_state is not None:
+            np.random.seed(random_state)
 
     def fit(self, X, y):
         X, y = self._numpify_and_adjust(X, y)
@@ -82,8 +82,8 @@ class AdalineSGD(AdalineGD):
         self._initialize_weights(X.shape[1])
         self._cost = []
 
-        for _ in xrange(self.nIterations):
-            if self.doShuffle:
+        for _ in xrange(self.iterations):
+            if self.do_shuffle:
                 X, y = self._shuffle_training_data(X, y)
 
             cost = []
@@ -124,8 +124,8 @@ class AdalineSGD(AdalineGD):
         # it contains a continuous prediction for this row's y value, before being binarized
         output = self._net_input(features)
         error = target - output
-        # same 'update' formula and usage as the Perceptron ('error' is not an integer here though)
-        update = self.learningRate * error
+        # same 'update' formula and usage as the Perceptron ('error' is no an integer here though)
+        update = self.learning_rate * error
         self._weights[1:] += update * features
         self._weights[0] += update
         cost = (1./2.) * (error ** 2)

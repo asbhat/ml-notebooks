@@ -8,16 +8,16 @@ class Perceptron(BaseLinearClassifier):
     """
     A Perceptron (linear) classifier
 
-    learningRate: between 0 and 1
+    learning_rate: between 0 and 1
         1 means the complete difference between actual and estimated is applied (might overestimate and/or never converge)
         0 means there is no learning (weights do not change at all)
 
-    nIterations: integer >= 0
+    iterations: integer >= 0
         Number of times (or "epochs") the weights are corrected
     """
 
-    def __init__(self, learningRate=.01, nIterations=10):
-        super(Perceptron, self).__init__(learningRate, nIterations)
+    def __init__(self, learning_rate=.01, iterations=10):
+        super(Perceptron, self).__init__(learning_rate, iterations)
 
     def fit(self, X, y):
         X, y = self._numpify_and_adjust(X, y)
@@ -26,14 +26,14 @@ class Perceptron(BaseLinearClassifier):
         self._weights = np.zeros(1 + X.shape[1])
         self._errors = []
 
-        for _ in xrange(self.nIterations):
-            errorCount = 0
+        for _ in xrange(self.iterations):
+            error_count = 0
             for features, target in zip(X, y):
-                update = self.learningRate * (target - self.predict(features))
+                update = self.learning_rate * (target - self.predict(features))
                 self._weights[1:] += update * features  # update weights for this row's features
                 self._weights[0] += update  # update the threshold
-                errorCount += int(update != 0)  # count the rows in X where target != predicted
+                error_count += int(update != 0)  # count the rows in X where target != predicted
 
-            self._errors.append(errorCount)  # one value per iteration
+            self._errors.append(error_count)  # one value per iteration
 
         return self

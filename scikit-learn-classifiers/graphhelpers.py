@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib.colors import ListedColormap
 
 
-def plot_decision_regions(X, y, classifier, testIndexRange=None, resolution=0.02):
+def plot_decision_regions(X, y, classifier, test_index_range=None, resolution=0.02):
     """
     Visualize Decision Boundaries
     """
@@ -36,9 +36,9 @@ def plot_decision_regions(X, y, classifier, testIndexRange=None, resolution=0.02
         plt.scatter(x=X[y == target, 0], y=X[y == target, 1], alpha=0.8,
                     c=cmap(e), marker=markers[e], label=target)
 
-    if testIndexRange:
-        XTest = X[testIndexRange, :]
-        plt.scatter(XTest[:, 0], XTest[:, 1], c='', alpha=1.0, linewidths=1,
+    if test_index_range:
+        X_test = X[test_index_range, :]
+        plt.scatter(X_test[:, 0], X_test[:, 1], facecolors='none', edgecolors='k', alpha=1.0, linewidths=1,
                     marker='o', s=55, label='test set')
 
     return plt
